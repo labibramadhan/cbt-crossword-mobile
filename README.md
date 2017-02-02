@@ -5,7 +5,7 @@ src="static/images/logo.png"
 width="200"
 />
 
-# Computer Based Test Mobile - Crossword
+# Computer Based Test - Crossword - Mobile Based
 
 ## This package is on IONIC 2 conversion progress (85%)
 
