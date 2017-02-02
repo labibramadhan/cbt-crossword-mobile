@@ -30,6 +30,7 @@ The differences from the closed source version are:
 1. [Installation](#installation)
 1. [Running](#running)
     1. [Development](#development)
+1. [Credits](#credits)
 
 ### Screenshots
 **NOTE: Screenshots are still using the closed source version (all of them uses Indonesian language and the UI slightly different), you can hover on any screenshot image to see summarized feature in english**
@@ -80,3 +81,7 @@ For running this project on development mode, type this command:
 ```
 >_ npm run ionic:serve
 ```
+
+## Credits
+
+1. @satchamo for [Crossword-Generator](https://github.com/satchamo/Crossword-Generator) package
