@@ -1,7 +1,7 @@
 {
   "name": "cbt-crossword-mobile",
   "author": "Muhammad Labib Ramadhan",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "private": true,
   "scripts": {
     "clean": "ionic-app-scripts clean",

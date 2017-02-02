@@ -17,7 +17,8 @@ This is the open source version of my original project called Ujian Berbasis Kom
 The differences from the closed source version are:
 
 1. Variable names translated from Indonesian to English
-1. Model & code adjustments either on API Server & Mobile Application packages
+1. I10n or I18n supports
+1. Model & code adjustments either on API Server or Mobile Application packages
 1. Using Typescript language
 1. Upgraded to [Angular 2](http://angular.io) and [IONIC 2](http://ionicframework.com/docs/v2/)
 
