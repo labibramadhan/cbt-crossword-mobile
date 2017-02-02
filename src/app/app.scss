@@ -1,0 +1,113 @@
+// http://ionicframework.com/docs/v2/theming/
+// App Global Sass
+// --------------------------------------------------
+// Put style rules here that you want to apply globally. These
+// styles are for the entire app and not just one component.
+// Additionally, this file can be also used as an entry point
+// to import other Sass files to be included in the output CSS.
+//
+// Shared Sass variables, which can be used to adjust Ionic's
+// default Sass variables, belong in "theme/variables.scss".
+//
+// To declare rules for a specific mode, create a child rule
+// for the .md, .ios, or .wp mode classes. The mode class is
+// automatically applied to the <body> element in the app.
+[inline-block] {
+  display: inline-block;
+}
+
+.error-message {
+  margin-top: 5px;
+  color: #4c0d0d;
+}
+
+ion-item {
+  &[state="answer-fail"] {
+    background-color: #F53D3D;
+    color: white;
+
+    & .item-inner {
+      border-bottom: none!important;
+    }
+  }
+  &[state="answer-correct"] {
+    background-color: #43A047;
+    color: white;
+
+    & .item-inner {
+      border-bottom: none!important;
+    }
+  }
+}
+
+ion-alert.test-fill-cell {
+  & .alert-button-group {
+    display: inline-block;
+    text-align: right;
+    & .alert-button {
+      display: inline-block;
+      &.answer-destroy>.button-inner::before {
+        content: "\f398";
+        color: #F53D3D;
+      }
+      &.answer-hesitate>.button-inner::before {
+        content: "\f2bc\f446";
+        color: #FF5722;
+      }
+      &.answer-confidence>.button-inner::before {
+        content: "\f2b8";
+        color: #387EF5;
+      }
+      &.answer-destroy>.button-inner::before,
+      &.answer-hesitate>.button-inner::before,
+      &.answer-confidence>.button-inner::before {
+        font-size: 25px;
+        font-family: Ionicons;
+      }
+    }
+  }
+}
+
+button .fa {
+  margin-right: 5px;
+}
+
+page-auth-login {
+  & ion-title {
+    text-align: center;
+  }
+  &>ion-content {
+    background-image: url('../assets/img/bg-glamour.jpg');
+    background-position: center center;
+    background-size: cover;
+    & .error-message {
+      color: #f38686;
+    }
+    & .item {
+      background-color: transparent;
+    }
+    & ion-item:not(.input-has-focus) ion-label {
+      color: white!important;
+    }
+    & input {
+      color: white;
+    }
+  }
+}
+
+page-auth-registration {
+  @extend page-auth-login;
+}
+
+page-test-finish {
+  @extend page-auth-login;
+  & .finish {
+    position: absolute;
+    bottom: 0;
+  }
+  & .finish h3 {
+    color: white;
+    line-height: 63px;
+    font-size: 2.8em;
+  }
+}

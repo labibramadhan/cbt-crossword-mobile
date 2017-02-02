@@ -1,0 +1,57 @@
+<ion-header>
+  <ion-navbar color="primary">
+    <ion-title>
+      {{'test.score.title' | translate}}
+    </ion-title>
+  </ion-navbar>
+</ion-header>
+<ion-content *ngIf="pageReady">
+  <ion-list no-margin>
+    <ion-item-group>
+      <ion-item-divider color="primary">
+        {{'answer.grade' | translate}}
+      </ion-item-divider>
+      <ion-item>
+        {{answer.grade}}
+      </ion-item>
+      <ion-item-divider color="primary">
+        {{'answer.duration' | translate}}
+      </ion-item-divider>
+      <ion-item>
+        0
+      </ion-item>
+      <ion-item-divider color="primary" *ngIf="answer.answerCheats.length">
+        {{'answer.cheat.detected' | translate}} {{answer.answerCheats.length}}x
+      </ion-item-divider>
+      <ion-item *ngIf="answer.answerCheats.length" ng-repeat="cheat in answer.answerCheats">
+        <!-- {{$index + 1}}. {{moment.duration(cheat.duration).format('ss [' + timeLabel.second + ']', {trim : false})}} ({{cheat.sanction}} {{'answer.grade' | translate}}) -->
+      </ion-item>
+
+    </ion-item-group>
+  </ion-list>
+  <ion-list>
+    <ion-item-group *ngFor="let direction of ['down', 'across']; let idxDir = index; trackBy: idxDir">
+      <ion-item-divider color="primary">
+        {{'test.' + direction | translate}}
+      </ion-item-divider>
+      <ion-item [attr.state]="getCellTruth(cell) ? 'answer-correct' : 'answer-fail'" *ngFor="let cell of legends[direction]; let idx = index; trackBy: idx">
+        <small>{{cell.position}}. {{cell.clue}}</small>
+        <div>
+          <small *ngIf="getCellRemark(cell) === 0">
+            {{'answer.remark.hesitate' | translate}}
+          </small>
+          <small *ngIf="getCellRemark(cell) === 1">
+            {{'answer.remark.confidence' | translate}}
+          </small>
+          <small *ngIf="getCellRemark(cell) < 0">
+            {{'answer.remark.empty' | translate}}
+          </small>
+        </div>
+      </ion-item>
+    </ion-item-group>
+  </ion-list>
+
+  <button ion-button color="secondary" (click)="finish()" full>
+    Logout
+  </button>
+</ion-content>

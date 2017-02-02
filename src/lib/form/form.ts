@@ -1,0 +1,1 @@
+export { FormGenerator } from './generator';

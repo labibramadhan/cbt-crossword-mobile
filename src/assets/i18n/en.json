@@ -1,0 +1,47 @@
+{
+  "character": "character(s)",
+
+  "button.cancel": "Cancel",
+  "button.across": "Across",
+  "button.down": "Down",
+  "button.finish": "Finish Now",
+
+  "user.name": "Full Name",
+  "user.username": "Participant ID",
+  "user.password": "Password",
+  "user.passwordConfirm": "Confirm Password",
+
+  "login.title": "Login",
+  "login.submit": "LOGIN",
+
+  "registration.title": "Register as Participant",
+  "registration.submit": "DAFTAR",
+
+  "test.title": "Crossword Test",
+  "test.across": "Across",
+  "test.down": "Down",
+
+  "test.score.title": "Your Test Result",
+
+  "test.finish.title": "Finish",
+  "test.finish.description": "Thanks for using CBT Crossword application!",
+
+  "answer.grade": "Grade",
+  "answer.duration": "Test Duration",
+  "answer.cheat.detected": "Terdeteksi Mencontek Sebanyak",
+  "answer.remark.hesitate": "Answered with hesitation",
+  "answer.remark.confidence": "Answered with confidence",
+  "answer.remark.empty": "Not answered",
+
+  "package.schedule.code": "Code",
+
+  "confirm.test.fill.title": "Fill No. {{number}}",
+  "confirm.test.fill.description": "Down or Across?",
+
+  "confirm.test.finish.title": "Finish Test",
+  "confirm.test.finish.description": "Do you want to submit your answers right now?",
+
+  "prompt.test.fill.fill": "Your answer..",
+
+  "error.field.required": "This field is required"
+}

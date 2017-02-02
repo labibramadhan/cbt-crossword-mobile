@@ -1,0 +1,28 @@
+<ion-header>
+  <ion-navbar color="primary">
+    <ion-title>
+      {{'test.title' | translate}}
+    </ion-title>
+  </ion-navbar>
+</ion-header>
+<ion-content *ngIf="pageReady">
+  <ion-item-divider color="primary" text-center>
+    <ion-icon name="timer"></ion-icon>
+    <h2 inline-block><strong>{{timeCounter}}</strong></h2>
+  </ion-item-divider>
+
+  <ion-list>
+    <ion-item-group *ngFor="let direction of ['down', 'across']; let idxDir = index; trackBy: idxDir">
+      <ion-item-divider color="primary">
+        {{'test.' + direction | translate}}
+      </ion-item-divider>
+      <ion-item *ngFor="let cell of legends[direction]; let idx = index; trackBy: idx" (click)="fill(cell.position, cell.type)">
+        <small>{{cell.position}}. {{cell.clue}}</small>
+      </ion-item>
+    </ion-item-group>
+  </ion-list>
+
+  <button ion-button color="secondary" *ngIf="!timeUp && halfTime" (click)="finishConfirm()" full>
+    Finish
+  </button>
+</ion-content>

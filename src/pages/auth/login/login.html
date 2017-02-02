@@ -1,0 +1,15 @@
+<ion-header>
+  <ion-navbar color="primary">
+    <ion-title>
+      {{'login.title' | translate}}
+    </ion-title>
+  </ion-navbar>
+</ion-header>
+<ion-content padding>
+  <form-generator [onSubmit]="submit" [schemas]="schemas">
+    <button ion-button type="submit" icon-left full>
+      <ion-icon name="log-in"></ion-icon>
+      {{'login.submit' | translate}}
+    </button>
+  </form-generator>
+</ion-content>
