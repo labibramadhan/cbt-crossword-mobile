@@ -2,7 +2,7 @@
 title="Logo"
 alt="UBK TTS | CBT Crossword Mobile - Logo"
 src="static/images/logo.png"
-width="250"
+width="200"
 />
 
 # Computer Based Test Mobile - Crossword
@@ -37,28 +37,28 @@ The differences from the closed source version are:
 title="Participant - Login"
 alt="UBK TTS | CBT Crossword Mobile - Participant - Login"
 src="static/images/screenshots/SMARTPHONE - Login.png"
-width="750"
+width="350"
 />
 
 <img
 title="Participant - Registration"
 alt="UBK TTS | CBT Crossword Mobile - Participant - Registration"
 src="static/images/screenshots/SMARTPHONE - Register.png"
-width="750"
+width="350"
 />
 
 <img
 title="Participant - Test - Fill an Answer"
 alt="UBK TTS | CBT Crossword Mobile - Participant - Test"
 src="static/images/screenshots/SMARTPHONE - Peserta - Test - Isi Jawaban.png"
-width="750"
+width="350"
 />
 
 <img
 title="Participant - Test Results"
 alt="UBK TTS | CBT Crossword Mobile - Participant - Test - Results"
 src="static/images/screenshots/SMARTPHONE - Peserta - Test - Nilai.png"
-width="750"
+width="350"
 />
 
 ## Prerequisites
