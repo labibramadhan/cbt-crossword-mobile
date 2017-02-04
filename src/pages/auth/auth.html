@@ -1,4 +1,24 @@
-<ion-tabs mode="wp" color="primary" tabsPlacement="bottom">
-  <ion-tab [root]="tab1Root" tabTitle="Login" tabIcon="log-in"></ion-tab>
-  <ion-tab [root]="tab2Root" tabTitle="Registration" tabIcon="person-add"></ion-tab>
-</ion-tabs>
+<ion-header>
+  <ion-navbar color="primary" text-center>
+    <ion-title>{{'welcome' | translate}}</ion-title>
+  </ion-navbar>
+  <ion-toolbar class="auth-segment" color="primary">
+    <ion-segment [(ngModel)]="page">
+      <ion-segment-button value="login">
+        {{'login.title' | translate}}
+      </ion-segment-button>
+      <ion-segment-button value="registration">
+        {{'registration.title' | translate}}
+      </ion-segment-button>
+    </ion-segment>
+  </ion-toolbar>
+</ion-header>
+<ion-content>
+  <ng-container [ngSwitch]="page">
+    <page-auth-login *ngSwitchCase="'login'"></page-auth-login>
+    <page-auth-registration *ngSwitchCase="'registration'"></page-auth-registration>
+  </ng-container>
+</ion-content>
+<ion-footer class="copyright" text-center>
+  Copyright &copy; 2016 Risen Labs Company
+</ion-footer>

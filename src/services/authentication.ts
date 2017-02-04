@@ -2,6 +2,7 @@ import { AnswerApi, PackageScheduleApi, PersonApi } from '../lib/loopback-sdk/se
 
 import { AclService } from 'angular2-acl';
 import { Injectable } from '@angular/core';
+import { RejectionHandler } from './rejection-handler';
 import { Router } from '@angular/router';
 import { TestValidator } from './test-validator';
 import _ from 'lodash';
@@ -15,6 +16,7 @@ export class AuthenticationService {
     private person: PersonApi,
     private router: Router,
     private testValidator: TestValidator,
+    private rejectionHandler: RejectionHandler
   ) { }
 
   redirector() {
@@ -23,9 +25,9 @@ export class AuthenticationService {
     }
   }
 
-  async authenticationCheck(currentUser?:any) {
+  async authenticationCheck() {
     try {
-      const whoAmI = currentUser ? currentUser : <{ roles: String[] }>await this.person.whoAmI().toPromise();
+      const whoAmI = <{ roles: String[] }>await this.person.whoAmI().toPromise();
       this.aclService.flushRoles();
       for (const role of whoAmI.roles) {
         this.aclService.attachRole(role);
@@ -51,14 +53,21 @@ export class AuthenticationService {
       _.get(model, 'password') &&
       _.get(model, 'code')
     ) {
-      const login = <{ userId: string }>await this.person.login(model).toPromise();
+      let login;
+      try {
+        login = <{ userId: string }>await this.person.login(model).toPromise();
+      } catch (err) {
+        this.rejectionHandler.show(err);
+        return;
+      }
       try {
         await this.testValidator.validateCode(model.code, login.userId);
-      } catch(errorCode) {
+      } catch (err) {
+        this.rejectionHandler.show(err);
         await this.logout();
         return;
       }
-      await this.authenticationCheck(login);
+      await this.authenticationCheck();
       this.router.navigateByUrl(`/test/fill/${model.code}`);
     }
   };
@@ -72,15 +81,22 @@ export class AuthenticationService {
   }) {
     model.email = model.username + "@mailinator.com";
 
-    await this.person.registerParticipant(model).toPromise();
-    console.log('Pendaftaran berhasil');
+    try {
+      await this.person.registerParticipant(model).toPromise();
+    } catch (err) {
+      this.rejectionHandler.show(err);
+    }
 
     await this.login(model);
-    console.log('Selamat mengerjakan TTS!');
   };
 
   async logout() {
-    await this.person.logout().toPromise();
+    try {
+      await this.person.logout().toPromise();
+    } catch (e) {
+      //
+    }
+
     this.aclService.flushRoles();
     this.aclService.attachRole('guest');
     this.router.navigateByUrl('/');

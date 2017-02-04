@@ -1,10 +1,14 @@
+import 'moment-duration-format';
+
 import { ActivatedRoute, Router } from '@angular/router';
 import { AnswerApi, PersonApi } from '../../../lib/loopback-sdk/services';
 import { Component, OnInit } from '@angular/core';
 import { LocalStorage, StorageProperty } from 'h5webstorage';
 
 import { Answer } from '../../../lib/loopback-sdk/models';
+import { TranslateService } from 'ng2-translate';
 import _ from 'lodash';
+import moment from 'moment';
 
 export interface TestScorePageParams {
   id: string
@@ -15,9 +19,15 @@ export interface TestScorePageParams {
   templateUrl: 'score.html'
 })
 export class TestScorePage implements OnInit {
+  moment = moment;
   pageReady: Boolean = false;
   routeParams: TestScorePageParams;
   answer: Answer;
+  timeLabel = {
+    hour: 'time.hour',
+    minute: 'time.minute',
+    second: 'time.second'
+  };
 
   @StorageProperty() grids: any;
   @StorageProperty() legends: any;
@@ -28,7 +38,8 @@ export class TestScorePage implements OnInit {
     private localStorage: LocalStorage,
     private person: PersonApi,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private translate: TranslateService
   ) { }
 
   async ngOnInit() {
@@ -110,6 +121,10 @@ export class TestScorePage implements OnInit {
             break;
         }
       });
+    });
+
+    _.forEach(this.timeLabel, (value, key) => {
+      vm.timeLabel[key] = vm.translate.instant(value);
     });
 
     this.pageReady = true;

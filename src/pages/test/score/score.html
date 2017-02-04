@@ -18,23 +18,33 @@
         {{'answer.duration' | translate}}
       </ion-item-divider>
       <ion-item>
-        0
+        {{moment.duration(answer.duration).format('HH [' + timeLabel.hour + '] mm [' + timeLabel.minute + ']', {trim : false})}}
       </ion-item>
       <ion-item-divider color="primary" *ngIf="answer.answerCheats.length">
         {{'answer.cheat.detected' | translate}} {{answer.answerCheats.length}}x
       </ion-item-divider>
-      <ion-item *ngIf="answer.answerCheats.length" ng-repeat="cheat in answer.answerCheats">
-        <!-- {{$index + 1}}. {{moment.duration(cheat.duration).format('ss [' + timeLabel.second + ']', {trim : false})}} ({{cheat.sanction}} {{'answer.grade' | translate}}) -->
-      </ion-item>
-
+      <ng-container *ngIf="answer.answerCheats.length">
+        <ion-item *ngFor="let cheat of answer.answerCheats; let idx = index; trackBy: idx">
+          {{idx + 1}}. <strong>{{moment.duration(cheat.duration).format('ss [' + timeLabel.second + ']', {trim : false})}}</strong> ({{cheat.sanction}}
+          {{'answer.grade' | translate}})
+        </ion-item>
+      </ng-container>
+      <ion-item-divider color="primary">
+        {{'test.answer' | translate}}
+      </ion-item-divider>
+      <crossword [grids]="grids" [reveal]="true"></crossword>
+      <ion-item-divider color="primary">
+        {{'answer.result' | translate}}
+      </ion-item-divider>
+      <crossword [grids]="grids" [values]="values"></crossword>
     </ion-item-group>
   </ion-list>
-  <ion-list>
+  <ion-list no-margin>
     <ion-item-group *ngFor="let direction of ['down', 'across']; let idxDir = index; trackBy: idxDir">
       <ion-item-divider color="primary">
         {{'test.' + direction | translate}}
       </ion-item-divider>
-      <ion-item [attr.state]="getCellTruth(cell) ? 'answer-correct' : 'answer-fail'" *ngFor="let cell of legends[direction]; let idx = index; trackBy: idx">
+      <ion-item [attr.state]="getCellTruth(cell) ? 'success' : 'danger'" *ngFor="let cell of legends[direction]; let idx = index; trackBy: idx">
         <small>{{cell.position}}. {{cell.clue}}</small>
         <div>
           <small *ngIf="getCellRemark(cell) === 0">
@@ -50,7 +60,6 @@
       </ion-item>
     </ion-item-group>
   </ion-list>
-
   <button ion-button color="secondary" (click)="finish()" full>
     Logout
   </button>

@@ -1,10 +1,16 @@
 {
+  "welcome": "CBT Crossword",
+
   "character": "character(s)",
 
   "button.cancel": "Cancel",
   "button.across": "Across",
   "button.down": "Down",
   "button.finish": "Finish Now",
+
+  "time.hour": "Hour(s)",
+  "time.minute": "Minute(s)",
+  "time.second": "Second(s)",
 
   "user.name": "Full Name",
   "user.username": "Participant ID",
@@ -14,10 +20,11 @@
   "login.title": "Login",
   "login.submit": "LOGIN",
 
-  "registration.title": "Register as Participant",
-  "registration.submit": "DAFTAR",
+  "registration.title": "Register",
+  "registration.submit": "REGISTER",
 
   "test.title": "Crossword Test",
+  "test.answer": "Correct Answers",
   "test.across": "Across",
   "test.down": "Down",
 
@@ -32,6 +39,7 @@
   "answer.remark.hesitate": "Answered with hesitation",
   "answer.remark.confidence": "Answered with confidence",
   "answer.remark.empty": "Not answered",
+  "answer.result": "Your Answers",
 
   "package.schedule.code": "Code",
 
@@ -43,5 +51,12 @@
 
   "prompt.test.fill.fill": "Your answer..",
 
-  "error.field.required": "This field is required"
+  "error": "Unknown error ocurred",
+
+  "error.field.required": "This field is required",
+
+  "error.package.schedule.inactive": "This test is inactive.",
+  "error.package.schedule.taken": "You have taken and finished this test before.",
+  "error.package.schedule.notFound": "Invalid code (not found)",
+  "error.package.schedule.unqualified": "Cannot take this test, this test has only {{total}} questions."
 }

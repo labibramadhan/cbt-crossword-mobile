@@ -1,5 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { Nav, Platform } from 'ionic-angular';
+import { Nav, Platform, ToastController } from 'ionic-angular';
 import { Splashscreen, StatusBar } from 'ionic-native';
 
 import { AuthPage } from '../pages/auth/auth';
@@ -13,7 +13,12 @@ export class MyApp {
 
   rootPage = AuthPage;
 
-  constructor(platform: Platform, translate: TranslateService) {
+  constructor(
+    platform: Platform,
+    translate: TranslateService,
+    private toast: ToastController
+  ) {
+
     platform.ready().then(() => {
       // Okay, so the platform is ready and our plugins are available.
       // Here you can do any higher level native things you might need.

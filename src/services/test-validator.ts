@@ -2,8 +2,10 @@ import { AnswerApi, PackageScheduleApi } from '../lib/loopback-sdk/services';
 
 import { CBTError } from '../lib/custom/CBTError';
 import { Injectable } from '@angular/core';
+import { LocalStorage } from 'h5webstorage';
 import Moment from 'moment';
 import { PackageSchedule } from '../lib/loopback-sdk/models';
+import { TranslateService } from 'ng2-translate';
 import { extendMoment } from 'moment-range';
 
 const moment = extendMoment(Moment);
@@ -12,7 +14,9 @@ const moment = extendMoment(Moment);
 export class TestValidator {
   constructor(
     private answer: AnswerApi,
-    private packageSchedule: PackageScheduleApi
+    private localStorage: LocalStorage,
+    private packageSchedule: PackageScheduleApi,
+    private translate: TranslateService
   ) { }
 
   async validateCode(code: string, userId: string) {
@@ -33,22 +37,26 @@ export class TestValidator {
       const end = new Date(schedule.end);
       var range = moment.range(start, end);
       if (!range.contains(new Date())) {
-        throw new CBTError(111);
+        const err = new CBTError(111);
+        throw this.translate.instant(err.key);
       } else if (schedule.package.questions.length < 5) {
-        throw new CBTError(112, {
-          length: schedule.package.questions.length
+        const err = new CBTError(112, {
+          total: schedule.package.questions.length
         });
+        throw this.translate.instant(err.key);
       } else {
         const answerCount = <{ count: Number }>await this.answer.count({
           packageSchedule_id: schedule.id,
           created_by: userId
         }).toPromise();
         if (answerCount.count) {
-          throw new CBTError(113);
+          const err = new CBTError(113);
+          throw this.translate.instant(err.key);
         }
       }
     } else {
-      throw new CBTError(114);
+      const err = new CBTError(114);
+      throw this.translate.instant(err.key);
     }
   };
 }

@@ -20,7 +20,7 @@ function WordElement(word, index) {
 }
 
 function Crossword(words_in, clues_in) {
-  var LONGEST_WORD = words_in.sort(function (a, b) { return b.length - a.length; })[0];
+  var LONGEST_WORD = words_in.slice(0).sort(function (a, b) { return b.length - a.length; })[0];
   var GRID_COLS = Math.floor(document.body.clientWidth / 30);
   if (GRID_COLS < LONGEST_WORD) {
     GRID_COLS = LONGEST_WORD + 5;

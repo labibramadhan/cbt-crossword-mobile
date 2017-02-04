@@ -1,4 +1,5 @@
 import { BROWSER_STORAGE_PROVIDERS, WebStorageModule } from "h5webstorage";
+import { Crossword, CrosswordCell } from '../pages/test/components/crossword/crossword';
 import { ErrorHandler, NgModule } from '@angular/core';
 import { FieldError, FieldTypeInput } from '../lib/form/fields/fields';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -15,6 +16,7 @@ import { AuthenticationService } from '../services/authentication';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormGenerator } from '../lib/form/form';
 import { MyApp } from './app.component';
+import { RejectionHandler } from '../services/rejection-handler';
 import { SDKBrowserModule } from '../lib/loopback-sdk/';
 import { TestFinishPage } from '../pages/test/finish/finish';
 import { TestPage } from '../pages/test/test';
@@ -22,6 +24,11 @@ import { TestScorePage } from '../pages/test/score/score';
 import { TestValidator } from '../services/test-validator';
 
 const routes: Routes = [
+  {
+    path: '',
+    redirectTo: 'auth',
+    pathMatch: 'full'
+  },
   {
     path: 'auth',
     component: AuthPage
@@ -46,6 +53,8 @@ const routes: Routes = [
     AuthPage,
     AuthLoginPage,
     AuthRegistrationPage,
+    Crossword,
+    CrosswordCell,
     TestPage,
     TestScorePage,
     TestFinishPage,
@@ -74,6 +83,8 @@ const routes: Routes = [
     AuthPage,
     AuthLoginPage,
     AuthRegistrationPage,
+    Crossword,
+    CrosswordCell,
     TestPage,
     TestScorePage,
     TestFinishPage
@@ -84,6 +95,7 @@ const routes: Routes = [
       useClass: IonicErrorHandler
     },
     BROWSER_STORAGE_PROVIDERS,
+    RejectionHandler,
     AclService,
     AuthenticationService,
     TestValidator

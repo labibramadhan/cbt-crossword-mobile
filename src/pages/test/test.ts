@@ -3,7 +3,7 @@ import 'moment-duration-format';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Answer, PackageSchedule } from '../../lib/loopback-sdk/models';
 import { AnswerApi, PackageScheduleApi, PersonApi } from '../../lib/loopback-sdk/services';
-import { Component, OnInit } from '@angular/core';
+import { Component, DoCheck, OnInit, ViewChild } from '@angular/core';
 import { LocalStorage, StorageProperty } from 'h5webstorage';
 
 import { AlertController } from 'ionic-angular';
@@ -21,7 +21,7 @@ export interface TestPageParams {
   selector: 'page-test',
   templateUrl: 'test.html'
 })
-export class TestPage implements OnInit {
+export class TestPage implements OnInit, DoCheck {
 
   pageReady: Boolean = false;
   routeParams: TestPageParams;
@@ -31,11 +31,14 @@ export class TestPage implements OnInit {
   timeCounter: any = 0;
   schedule: PackageSchedule;
 
-  @StorageProperty() dirty: any;
+  @ViewChild('timer') timerEl: any;
+  @ViewChild('timerSpacer') timerSpacerEl: any;
+
+  @StorageProperty() dirty: any = false;
   @StorageProperty() grids: any;
   @StorageProperty() legends: any;
   @StorageProperty() questionIds: any;
-  @StorageProperty() timeElapsed: any;
+  @StorageProperty() timeElapsed: number = 0;
   @StorageProperty() cheats: Array<any> = [];
   @StorageProperty() values: Array<any> = [];
   @StorageProperty() remarks = {
@@ -56,11 +59,24 @@ export class TestPage implements OnInit {
     private translate: TranslateService,
   ) { }
 
+  ngDoCheck() {
+    if (this.timerSpacerEl && this.timerEl) {
+      this.timerSpacerEl.nativeElement.setAttribute('style', `height: ${this.timerEl._elementRef.nativeElement.offsetHeight}px`);
+    }
+  }
+
   async ngOnInit() {
     const vm = this;
 
-    if (!this.dirty) {
-      this.reset();
+    if (
+      this.grids &&
+      this.legends &&
+      this.values &&
+      !this.questionIds
+    ) {
+      this.localStorage.removeItem('grids');
+      this.localStorage.removeItem('legends');
+      this.values = [];
     }
 
     this.route.params.subscribe((v) => {
@@ -126,21 +142,20 @@ export class TestPage implements OnInit {
     }
 
     if (this.schedule.package.sanction && this.schedule.package.sanctionTrigger > 0) {
-      let cheatTime;
+      let cheatStart;
       document.addEventListener('pause', () => {
-        const cheatStart = Date.now();
-        cheatTime = setTimeout(() => {
-          const cheatEnd = Date.now();
-          const cheatDuration = cheatEnd - cheatStart;
+        cheatStart = Date.now();
+      });
+
+      document.addEventListener('resume', () => {
+        const cheatEnd = Date.now();
+        const cheatDuration = cheatEnd - cheatStart;
+        if (cheatDuration >= vm.schedule.package.sanctionTrigger * 1000) {
           vm.cheats.push({
             sanction: vm.schedule.package.sanction,
             duration: cheatDuration
           });
-        }, vm.schedule.package.sanctionTrigger * 1000);
-      });
-
-      document.addEventListener('resume', () => {
-        clearTimeout(cheatTime);
+        }
       });
     }
 
@@ -164,16 +179,17 @@ export class TestPage implements OnInit {
       if (!vm.timeUp) {
         const serverTimeQuery = await vm.packageSchedule.currentTime().toPromise();
         const serverTime = serverTimeQuery.time;
-        const currentMs = vm.timeElapsed = moment(serverTime).diff(startTest);
+        const currentMs = moment(serverTime).diff(startTest);
         const leftTime = duration - currentMs;
         if (leftTime < 0) {
           vm.timeUp = true;
           clearInterval(vm.tickingTime);
-          setTimeout(vm.finish, 3000);
+          setTimeout(() => { vm.finish() }, 3000);
           return;
         } else {
           vm.timeUp = false;
         }
+        vm.timeElapsed++;
         vm.halfTime = leftTime < (duration / 2);
         vm.timeCounter = moment.duration(leftTime, 'ms');
         vm.timeCounter = vm.timeCounter.format('HH:mm:ss', {
@@ -190,14 +206,14 @@ export class TestPage implements OnInit {
   reset() {
     clearInterval(this.tickingTime);
 
-    localStorage.removeItem('values');
-    localStorage.removeItem('cheats');
-    localStorage.removeItem('remarks');
-    localStorage.removeItem('grids');
-    localStorage.removeItem('legends');
-    localStorage.removeItem('questionIds');
-    localStorage.removeItem('dirty');
-    localStorage.removeItem('timeElapsed');
+    this.localStorage.removeItem('values');
+    this.localStorage.removeItem('cheats');
+    this.localStorage.removeItem('remarks');
+    this.localStorage.removeItem('grids');
+    this.localStorage.removeItem('legends');
+    this.localStorage.removeItem('questionIds');
+    this.localStorage.removeItem('dirty');
+    this.localStorage.removeItem('timeElapsed');
   }
 
   getCellRemark(cell) {
@@ -291,6 +307,12 @@ export class TestPage implements OnInit {
     }
   };
 
+  fillByEvent(event) {
+    if (_.has(event, 'number')) {
+      this.fill(event.number);
+    }
+  }
+
   async fill(number, forceDirection = false) {
     if (this.timeUp) return;
 
@@ -335,7 +357,6 @@ export class TestPage implements OnInit {
   };
 
   async fillCell(cell) {
-    console.log(cell.word);
     const title = `No. ${cell.position}`;
     const alertFill = this.alertCtrl.create({
       title,
@@ -422,44 +443,46 @@ export class TestPage implements OnInit {
     await finishConfirm.present();
   };
 
-  async finish() {
-    const answers = this.buildAnswer();
+  finish = async () => {
+    const vm = this;
+
+    const answers = vm.buildAnswer();
 
     let grade: any = 0;
     const rate = 100 / answers.length;
 
-    const answeredCount = await this.answer.count({
-      created_by: this.loopbackAuth.getCurrentUserId(),
-      packageSchedule_id: this.schedule.id
+    const answeredCount = await vm.answer.count({
+      created_by: vm.loopbackAuth.getCurrentUserId(),
+      packageSchedule_id: vm.schedule.id
     }).toPromise();
 
     if (!answeredCount.count) {
-      const answerCreated = <Answer>await this.answer.create({
+      const answerCreated = <Answer>await vm.answer.create({
         grade: grade,
-        grids: this.grids,
-        packageSchedule_id: this.schedule.id,
-        duration: this.timeElapsed,
-        questionIds: this.questionIds
+        grids: vm.grids,
+        packageSchedule_id: vm.schedule.id,
+        duration: vm.timeElapsed * 1000,
+        questionIds: vm.questionIds
       }).toPromise();
       for (const answer of answers) {
         if (answer.correct) {
           grade += rate;
         }
-        await this.answer.createAnswerItems(answerCreated.id, _.extend(answer, { answer_id: answerCreated.id })).toPromise();
+        await vm.answer.createAnswerItems(answerCreated.id, _.extend(answer, { answer_id: answerCreated.id })).toPromise();
       }
-      for (const cheat of this.cheats) {
+      for (const cheat of vm.cheats) {
         grade = grade + cheat.sanction;
-        this.answer.createAnswerCheats(answerCreated.id, _.extend(cheat, { answer_id: answerCreated.id }))
+        vm.answer.createAnswerCheats(answerCreated.id, _.extend(cheat, { answer_id: answerCreated.id }))
       }
       grade = parseFloat((Math.round(grade * 100) / 100).toString()).toFixed(2);
 
-      this.reset();
+      vm.reset();
 
-      await this.answer.updateAttributes(answerCreated.id, _.extend(answerCreated, { grade })).toPromise();
-      if (this.schedule.showGrade) {
-        this.router.navigateByUrl(`/test/score/${answerCreated.id}`);
+      await vm.answer.updateAttributes(answerCreated.id, _.extend(answerCreated, { grade })).toPromise();
+      if (vm.schedule.showGrade) {
+        vm.router.navigateByUrl(`/test/score/${answerCreated.id}`);
       } else {
-        this.router.navigateByUrl('/test/finish');
+        vm.router.navigateByUrl('/test/finish');
       }
     }
   };

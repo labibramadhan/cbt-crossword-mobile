@@ -12,6 +12,10 @@
 // To declare rules for a specific mode, create a child rule
 // for the .md, .ios, or .wp mode classes. The mode class is
 // automatically applied to the <body> element in the app.
+$primary: #387EF5;
+$danger: #F53D3D;
+$warning: #FF5722;
+$success: #43A047;
 [inline-block] {
   display: inline-block;
 }
@@ -21,19 +25,31 @@
   color: #4c0d0d;
 }
 
-ion-item {
-  &[state="answer-fail"] {
-    background-color: #F53D3D;
-    color: white;
+ion-footer.copyright {
+  padding: 11px;
+  background: $primary;
+  color: white;
+  font-size: 0.9em;
+}
 
+ion-item {
+  &[state="danger"] {
+    background-color: $danger;
+    color: white;
     & .item-inner {
       border-bottom: none!important;
     }
   }
-  &[state="answer-correct"] {
-    background-color: #43A047;
+  &[state="warning"] {
+    background-color: $warning;
     color: white;
-
+    & .item-inner {
+      border-bottom: none!important;
+    }
+  }
+  &[state="success"] {
+    background-color: $success;
+    color: white;
     & .item-inner {
       border-bottom: none!important;
     }
@@ -48,15 +64,15 @@ ion-alert.test-fill-cell {
       display: inline-block;
       &.answer-destroy>.button-inner::before {
         content: "\f398";
-        color: #F53D3D;
+        color: $danger;
       }
       &.answer-hesitate>.button-inner::before {
         content: "\f2bc\f446";
-        color: #FF5722;
+        color: $warning;
       }
       &.answer-confidence>.button-inner::before {
         content: "\f2b8";
-        color: #387EF5;
+        color: $primary;
       }
       &.answer-destroy>.button-inner::before,
       &.answer-hesitate>.button-inner::before,
@@ -72,35 +88,37 @@ button .fa {
   margin-right: 5px;
 }
 
-page-auth-login {
-  & ion-title {
-    text-align: center;
-  }
-  &>ion-content {
-    background-image: url('../assets/img/bg-glamour.jpg');
-    background-position: center center;
-    background-size: cover;
-    & .error-message {
-      color: #f38686;
-    }
-    & .item {
-      background-color: transparent;
-    }
-    & ion-item:not(.input-has-focus) ion-label {
-      color: white!important;
-    }
-    & input {
+page-auth {
+  & .auth-segment {
+    & .segment-md .segment-button {
       color: white;
+      &.segment-activated {
+        color: white;
+        border-bottom-color: white;
+      }
     }
   }
 }
 
-page-auth-registration {
-  @extend page-auth-login;
+.glamour {
+  background-image: url('../assets/img/bg-glamour.jpg');
+  background-position: center center;
+  background-size: cover;
+  & .error-message {
+    color: #f38686;
+  }
+  & .item {
+    background-color: transparent;
+  }
+  & ion-item:not(.input-has-focus) ion-label {
+    color: white!important;
+  }
+  & input {
+    color: white;
+  }
 }
 
 page-test-finish {
-  @extend page-auth-login;
   & .finish {
     position: absolute;
     bottom: 0;
@@ -109,5 +127,56 @@ page-test-finish {
     color: white;
     line-height: 63px;
     font-size: 2.8em;
+  }
+}
+
+page-test {
+  & .time-counter {
+    position: fixed;
+    z-index: 999;
+    & ion-label {
+      margin: 8px 0;
+    }
+  }
+}
+
+crossword {
+  display: inline-block;
+  width: 100%;
+  & table {
+    border-collapse: collapse;
+    font-family: "Courier New", Courier, monospace;
+    margin: 0;
+    clear: both;
+    & td {
+      position: relative;
+      border: 1px solid #CDCDCD;
+      padding: 0;
+      margin: 0;
+      vertical-align: middle;
+      text-align: center;
+      width: 30px;
+      height: 30px;
+      background-color: #F4F4F4;
+      & [state="disabled"] {
+        background-color: #9E9E9E;
+      }
+      &>div {
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        top: 0;
+        & .crossword-char {
+          line-height: 30px;
+        }
+        & .crossword-number {
+          position: absolute;
+          left: 2px;
+          top: 0;
+          font-size: 10px;
+        }
+      }
+    }
   }
 }

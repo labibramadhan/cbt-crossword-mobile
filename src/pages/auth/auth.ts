@@ -1,5 +1,3 @@
-import { AuthLoginPage } from './login/login';
-import { AuthRegistrationPage } from './registration/registration';
 import { Component } from '@angular/core';
 
 @Component({
@@ -7,9 +5,7 @@ import { Component } from '@angular/core';
   templateUrl: 'auth.html'
 })
 export class AuthPage {
-  tab1Root: any = AuthLoginPage;
-  // tab2Root: any = AuthLoginPage;
-  tab2Root: any = AuthRegistrationPage;
+  page = 'login';
 
   constructor() {
 
